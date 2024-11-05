@@ -26,9 +26,17 @@ class AssignmentViewModel: ObservableObject {
         updateNextDueAssignment()    // Update the next due assignment
     }
 
+    func toggleCompletion(for assignment: Assignment) {
+        if let index = assignments.firstIndex(where: { $0.id == assignment.id }) {
+            assignments[index].isCompleted.toggle() // Toggle the completed status
+            saveAssignments()                       // Save updated completion status
+            updateNextDueAssignment()               // Update next due assignment if needed
+        }
+    }
+
     private func updateNextDueAssignment() {
         nextDueAssignment = assignments
-            .filter { $0.dueDate > Date() }
+            .filter { $0.dueDate > Date() && !$0.isCompleted } // Only include future, incomplete assignments
             .min(by: { $0.dueDate < $1.dueDate })
 
         // Save the next due assignment to UserDefaults
@@ -62,6 +70,7 @@ class AssignmentViewModel: ObservableObject {
         let today = Date()
         
         return assignments.filter { assignment in
+            guard !assignment.isCompleted else { return false } // Filter out completed assignments
             switch filter {
             case .today:
                 return calendar.isDateInToday(assignment.dueDate)

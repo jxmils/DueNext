@@ -22,22 +22,19 @@ struct MainView: View {
                     .padding(.top)
                 
                 List {
-                    // Today Section
                     let todayAssignments = viewModel.filteredAssignments(for: .today)
                     if !todayAssignments.isEmpty {
-                        AssignmentSection(title: "Today", assignments: todayAssignments)
+                        AssignmentSection(title: "Today", assignments: todayAssignments, viewModel: viewModel)
                     }
                     
-                    // Tomorrow Section
                     let tomorrowAssignments = viewModel.filteredAssignments(for: .tomorrow)
                     if !tomorrowAssignments.isEmpty {
-                        AssignmentSection(title: "Tomorrow", assignments: tomorrowAssignments)
+                        AssignmentSection(title: "Tomorrow", assignments: tomorrowAssignments, viewModel: viewModel)
                     }
                     
-                    // This Week Section
                     let weekAssignments = viewModel.filteredAssignments(for: .thisWeek)
                     if !weekAssignments.isEmpty {
-                        AssignmentSection(title: "This Week", assignments: weekAssignments)
+                        AssignmentSection(title: "This Week", assignments: weekAssignments, viewModel: viewModel)
                     }
                 }
                 .listStyle(InsetGroupedListStyle())
@@ -63,12 +60,11 @@ struct MainView: View {
     }
 }
 
-
-// Assignment Section
 struct AssignmentSection: View {
     var title: String
     var assignments: [Assignment]
-    
+    @ObservedObject var viewModel: AssignmentViewModel // Add view model to manage completion
+
     var body: some View {
         Section(header: Text(title)
                     .font(.title3)
@@ -77,39 +73,15 @@ struct AssignmentSection: View {
             ForEach(assignments) { assignment in
                 AssignmentCard(assignment: assignment)
                     .padding(.vertical, 4)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(action: {
+                            viewModel.toggleCompletion(for: assignment)
+                        }) {
+                            Label("Complete", systemImage: "checkmark.circle")
+                        }
+                        .tint(.green)
+                    }
             }
         }
-    }
-}
-
-// Assignment Card View
-struct AssignmentCard: View {
-    var assignment: Assignment
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(assignment.title)
-                .font(.headline)
-                .bold()
-                .lineLimit(1)
-                .padding(.bottom, 4)
-            
-            HStack {
-                Text("Due \(assignment.dueDate, style: .time)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                Spacer()
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(LinearGradient(
-                    gradient: Gradient(colors: [Color.blue.opacity(0.1), Color.blue.opacity(0.3)]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ))
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-        )
     }
 }

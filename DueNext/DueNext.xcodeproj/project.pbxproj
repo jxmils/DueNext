@@ -32,6 +32,12 @@
 		1B0DE1882CD9EF9E00724E91 /* AddAssignmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1862CD9EF9E00724E91 /* AddAssignmentView.swift */; };
 		1B0DE18A2CD9F28100724E91 /* AssignmentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1892CD9F28100724E91 /* AssignmentRowView.swift */; };
 		1B0DE18B2CD9F28100724E91 /* AssignmentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1892CD9F28100724E91 /* AssignmentRowView.swift */; };
+		1B0DE1922CDA036500724E91 /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1912CDA036500724E91 /* NotificationsManager.swift */; };
+		1B0DE1932CDA036500724E91 /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1912CDA036500724E91 /* NotificationsManager.swift */; };
+		1B0DE1952CDA03A600724E91 /* AssignmentCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1942CDA03A600724E91 /* AssignmentCardView.swift */; };
+		1B0DE1962CDA03A600724E91 /* AssignmentCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1942CDA03A600724E91 /* AssignmentCardView.swift */; };
+		1B0DE1992CDA03CD00724E91 /* VisualEffectBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1982CDA03CD00724E91 /* VisualEffectBlur.swift */; };
+		1B0DE19A2CDA03CE00724E91 /* VisualEffectBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1982CDA03CD00724E91 /* VisualEffectBlur.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +105,9 @@
 		1B0DE1862CD9EF9E00724E91 /* AddAssignmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssignmentView.swift; sourceTree = "<group>"; };
 		1B0DE1892CD9F28100724E91 /* AssignmentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentRowView.swift; sourceTree = "<group>"; };
 		1B0DE18C2CD9F74400724E91 /* DueNextWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DueNextWidgetExtension.entitlements; sourceTree = "<group>"; };
+		1B0DE1912CDA036500724E91 /* NotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsManager.swift; sourceTree = "<group>"; };
+		1B0DE1942CDA03A600724E91 /* AssignmentCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentCardView.swift; sourceTree = "<group>"; };
+		1B0DE1982CDA03CD00724E91 /* VisualEffectBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBlur.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +171,8 @@
 		1B0DE1302CD9E7B600724E91 /* DueNext */ = {
 			isa = PBXGroup;
 			children = (
+				1B0DE1972CDA03BF00724E91 /* Utils */,
+				1B0DE1902CDA035100724E91 /* Services */,
 				1B0DE17F2CD9EDD800724E91 /* ViewModels */,
 				1B0DE17E2CD9EC9300724E91 /* DueNext.entitlements */,
 				1B0DE17A2CD9E8ED00724E91 /* Controllers */,
@@ -236,6 +247,7 @@
 				1B0DE1832CD9EF5E00724E91 /* MainView.swift */,
 				1B0DE1862CD9EF9E00724E91 /* AddAssignmentView.swift */,
 				1B0DE1892CD9F28100724E91 /* AssignmentRowView.swift */,
+				1B0DE1942CDA03A600724E91 /* AssignmentCardView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -253,6 +265,22 @@
 				1B0DE1802CD9EDEE00724E91 /* AssignmentViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		1B0DE1902CDA035100724E91 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1B0DE1912CDA036500724E91 /* NotificationsManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		1B0DE1972CDA03BF00724E91 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1B0DE1982CDA03CD00724E91 /* VisualEffectBlur.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -418,7 +446,10 @@
 			files = (
 				1B0DE18A2CD9F28100724E91 /* AssignmentRowView.swift in Sources */,
 				1B0DE1342CD9E7B600724E91 /* ContentView.swift in Sources */,
+				1B0DE1922CDA036500724E91 /* NotificationsManager.swift in Sources */,
 				1B0DE1812CD9EDEE00724E91 /* AssignmentViewModel.swift in Sources */,
+				1B0DE1952CDA03A600724E91 /* AssignmentCardView.swift in Sources */,
+				1B0DE1992CDA03CD00724E91 /* VisualEffectBlur.swift in Sources */,
 				1B0DE17C2CD9E9A200724E91 /* Assignments.swift in Sources */,
 				1B0DE1872CD9EF9E00724E91 /* AddAssignmentView.swift in Sources */,
 				1B0DE1842CD9EF5E00724E91 /* MainView.swift in Sources */,
@@ -450,11 +481,14 @@
 				1B0DE1692CD9E89400724E91 /* DueNextWidgetLiveActivity.swift in Sources */,
 				1B0DE1852CD9EF5E00724E91 /* MainView.swift in Sources */,
 				1B0DE16D2CD9E89400724E91 /* AppIntent.swift in Sources */,
+				1B0DE19A2CDA03CE00724E91 /* VisualEffectBlur.swift in Sources */,
 				1B0DE1672CD9E89400724E91 /* DueNextWidgetBundle.swift in Sources */,
 				1B0DE17D2CD9E9A200724E91 /* Assignments.swift in Sources */,
 				1B0DE16B2CD9E89400724E91 /* DueNextWidget.swift in Sources */,
 				1B0DE1822CD9EDEE00724E91 /* AssignmentViewModel.swift in Sources */,
 				1B0DE1882CD9EF9E00724E91 /* AddAssignmentView.swift in Sources */,
+				1B0DE1932CDA036500724E91 /* NotificationsManager.swift in Sources */,
+				1B0DE1962CDA03A600724E91 /* AssignmentCardView.swift in Sources */,
 				1B0DE18B2CD9F28100724E91 /* AssignmentRowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
