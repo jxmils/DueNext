@@ -1,5 +1,5 @@
 //
-//  Assignments.swift
+//  Assignment.swift
 //  DueNext
 //
 //  Created by Jason Miller on 11/4/24.
@@ -11,11 +11,13 @@ class Assignment: Identifiable, Codable, ObservableObject {
     var id: UUID = UUID()
     var title: String
     var dueDate: Date
-    var isCompleted: Bool  // Removed `@Published` for `Codable` compatibility
+    var subject: String // New subject property
+    var isCompleted: Bool // Removed `@Published` for `Codable` compatibility
 
-    init(title: String, dueDate: Date, isCompleted: Bool = false) {
+    init(title: String, dueDate: Date, subject: String, isCompleted: Bool = false) {
         self.title = title
         self.dueDate = dueDate
+        self.subject = subject
         self.isCompleted = isCompleted
     }
 
@@ -25,6 +27,7 @@ class Assignment: Identifiable, Codable, ObservableObject {
         case id
         case title
         case dueDate
+        case subject
         case isCompleted
     }
 
@@ -33,6 +36,7 @@ class Assignment: Identifiable, Codable, ObservableObject {
         id = try container.decode(UUID.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
         dueDate = try container.decode(Date.self, forKey: .dueDate)
+        subject = try container.decode(String.self, forKey: .subject)
         isCompleted = try container.decode(Bool.self, forKey: .isCompleted)
     }
 
@@ -41,6 +45,7 @@ class Assignment: Identifiable, Codable, ObservableObject {
         try container.encode(id, forKey: .id)
         try container.encode(title, forKey: .title)
         try container.encode(dueDate, forKey: .dueDate)
+        try container.encode(subject, forKey: .subject)
         try container.encode(isCompleted, forKey: .isCompleted)
     }
 }

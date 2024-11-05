@@ -14,6 +14,17 @@ class AssignmentViewModel: ObservableObject {
     
     private let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
 
+    // Predefined subjects list
+    let predefinedSubjects = ["Math", "Science", "History", "English", "Art", "Other"]
+
+    // New property to store custom subjects created by users
+    @Published var customSubjects: [String] = []
+
+    // Combined list of predefined and custom subjects
+    var allSubjects: [String] {
+        return predefinedSubjects + customSubjects
+    }
+
     init() {
         #if DEBUG
         userDefaults?.removeObject(forKey: "assignments") // Clear cache for testing purposes
@@ -23,8 +34,8 @@ class AssignmentViewModel: ObservableObject {
         updateNextDueAssignment()
     }
 
-    func addAssignment(title: String, dueDate: Date) {
-        let newAssignment = Assignment(title: title, dueDate: dueDate)
+    func addAssignment(title: String, dueDate: Date, subject: String) {
+        let newAssignment = Assignment(title: title, dueDate: dueDate, subject: subject)
         assignments.append(newAssignment)
         saveAssignments()           // Save all assignments after adding
         updateNextDueAssignment()    // Update the next due assignment
@@ -36,6 +47,11 @@ class AssignmentViewModel: ObservableObject {
             saveAssignments()                       // Save updated completion status
             updateNextDueAssignment()               // Update next due assignment if needed
         }
+    }
+
+    func addCustomSubject(_ subject: String) {
+        guard !customSubjects.contains(subject) else { return }
+        customSubjects.append(subject)
     }
 
     private func updateNextDueAssignment() {
@@ -64,7 +80,7 @@ class AssignmentViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Overall Completion Percentage for Workload Overview
+    // MARK: - Completion Percentage for Workload Overview
     var completionPercentage: Double {
         let completedCount = assignments.filter { $0.isCompleted }.count
         let totalCount = assignments.count
