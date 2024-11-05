@@ -38,6 +38,12 @@
 		1B0DE1962CDA03A600724E91 /* AssignmentCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1942CDA03A600724E91 /* AssignmentCardView.swift */; };
 		1B0DE1992CDA03CD00724E91 /* VisualEffectBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1982CDA03CD00724E91 /* VisualEffectBlur.swift */; };
 		1B0DE19A2CDA03CE00724E91 /* VisualEffectBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1982CDA03CD00724E91 /* VisualEffectBlur.swift */; };
+		1B0DE19C2CDA076700724E91 /* WorkloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE19B2CDA076700724E91 /* WorkloadView.swift */; };
+		1B0DE19D2CDA076700724E91 /* WorkloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE19B2CDA076700724E91 /* WorkloadView.swift */; };
+		1B0DE1A02CDA085D00724E91 /* WorkloadProgressRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE19F2CDA085D00724E91 /* WorkloadProgressRingView.swift */; };
+		1B0DE1A12CDA085D00724E91 /* WorkloadProgressRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE19F2CDA085D00724E91 /* WorkloadProgressRingView.swift */; };
+		1B0DE1A32CDA089100724E91 /* AssignmentSummaryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1A22CDA089100724E91 /* AssignmentSummaryCardView.swift */; };
+		1B0DE1A42CDA089100724E91 /* AssignmentSummaryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1A22CDA089100724E91 /* AssignmentSummaryCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +114,9 @@
 		1B0DE1912CDA036500724E91 /* NotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsManager.swift; sourceTree = "<group>"; };
 		1B0DE1942CDA03A600724E91 /* AssignmentCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentCardView.swift; sourceTree = "<group>"; };
 		1B0DE1982CDA03CD00724E91 /* VisualEffectBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBlur.swift; sourceTree = "<group>"; };
+		1B0DE19B2CDA076700724E91 /* WorkloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkloadView.swift; sourceTree = "<group>"; };
+		1B0DE19F2CDA085D00724E91 /* WorkloadProgressRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkloadProgressRingView.swift; sourceTree = "<group>"; };
+		1B0DE1A22CDA089100724E91 /* AssignmentSummaryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentSummaryCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +252,7 @@
 		1B0DE1792CD9E8E400724E91 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1B0DE19E2CDA080D00724E91 /* WorkLoadOverview */,
 				1B0DE1332CD9E7B600724E91 /* ContentView.swift */,
 				1B0DE1832CD9EF5E00724E91 /* MainView.swift */,
 				1B0DE1862CD9EF9E00724E91 /* AddAssignmentView.swift */,
@@ -281,6 +291,16 @@
 				1B0DE1982CDA03CD00724E91 /* VisualEffectBlur.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		1B0DE19E2CDA080D00724E91 /* WorkLoadOverview */ = {
+			isa = PBXGroup;
+			children = (
+				1B0DE19B2CDA076700724E91 /* WorkloadView.swift */,
+				1B0DE19F2CDA085D00724E91 /* WorkloadProgressRingView.swift */,
+				1B0DE1A22CDA089100724E91 /* AssignmentSummaryCardView.swift */,
+			);
+			path = WorkLoadOverview;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -449,8 +469,11 @@
 				1B0DE1922CDA036500724E91 /* NotificationsManager.swift in Sources */,
 				1B0DE1812CD9EDEE00724E91 /* AssignmentViewModel.swift in Sources */,
 				1B0DE1952CDA03A600724E91 /* AssignmentCardView.swift in Sources */,
+				1B0DE19C2CDA076700724E91 /* WorkloadView.swift in Sources */,
 				1B0DE1992CDA03CD00724E91 /* VisualEffectBlur.swift in Sources */,
 				1B0DE17C2CD9E9A200724E91 /* Assignments.swift in Sources */,
+				1B0DE1A32CDA089100724E91 /* AssignmentSummaryCardView.swift in Sources */,
+				1B0DE1A02CDA085D00724E91 /* WorkloadProgressRingView.swift in Sources */,
 				1B0DE1872CD9EF9E00724E91 /* AddAssignmentView.swift in Sources */,
 				1B0DE1842CD9EF5E00724E91 /* MainView.swift in Sources */,
 				1B0DE1322CD9E7B600724E91 /* DueNextApp.swift in Sources */,
@@ -480,12 +503,15 @@
 			files = (
 				1B0DE1692CD9E89400724E91 /* DueNextWidgetLiveActivity.swift in Sources */,
 				1B0DE1852CD9EF5E00724E91 /* MainView.swift in Sources */,
+				1B0DE1A12CDA085D00724E91 /* WorkloadProgressRingView.swift in Sources */,
 				1B0DE16D2CD9E89400724E91 /* AppIntent.swift in Sources */,
 				1B0DE19A2CDA03CE00724E91 /* VisualEffectBlur.swift in Sources */,
 				1B0DE1672CD9E89400724E91 /* DueNextWidgetBundle.swift in Sources */,
 				1B0DE17D2CD9E9A200724E91 /* Assignments.swift in Sources */,
 				1B0DE16B2CD9E89400724E91 /* DueNextWidget.swift in Sources */,
 				1B0DE1822CD9EDEE00724E91 /* AssignmentViewModel.swift in Sources */,
+				1B0DE1A42CDA089100724E91 /* AssignmentSummaryCardView.swift in Sources */,
+				1B0DE19D2CDA076700724E91 /* WorkloadView.swift in Sources */,
 				1B0DE1882CD9EF9E00724E91 /* AddAssignmentView.swift in Sources */,
 				1B0DE1932CDA036500724E91 /* NotificationsManager.swift in Sources */,
 				1B0DE1962CDA03A600724E91 /* AssignmentCardView.swift in Sources */,

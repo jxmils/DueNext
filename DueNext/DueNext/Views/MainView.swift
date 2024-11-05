@@ -22,16 +22,19 @@ struct MainView: View {
                     .padding(.top)
                 
                 List {
+                    // Today Section
                     let todayAssignments = viewModel.filteredAssignments(for: .today)
                     if !todayAssignments.isEmpty {
                         AssignmentSection(title: "Today", assignments: todayAssignments, viewModel: viewModel)
                     }
                     
+                    // Tomorrow Section
                     let tomorrowAssignments = viewModel.filteredAssignments(for: .tomorrow)
                     if !tomorrowAssignments.isEmpty {
                         AssignmentSection(title: "Tomorrow", assignments: tomorrowAssignments, viewModel: viewModel)
                     }
                     
+                    // This Week Section
                     let weekAssignments = viewModel.filteredAssignments(for: .thisWeek)
                     if !weekAssignments.isEmpty {
                         AssignmentSection(title: "This Week", assignments: weekAssignments, viewModel: viewModel)
@@ -40,6 +43,13 @@ struct MainView: View {
                 .listStyle(InsetGroupedListStyle())
                 .navigationTitle("DueNext")
                 .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        NavigationLink(destination: WorkloadView(viewModel: viewModel)) {
+                            Image(systemName: "chart.pie.fill")
+                                .font(.title)
+                                .foregroundColor(.blue)
+                        }
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             isAddingNewAssignment = true
@@ -60,6 +70,7 @@ struct MainView: View {
     }
 }
 
+// Assignment Section
 struct AssignmentSection: View {
     var title: String
     var assignments: [Assignment]

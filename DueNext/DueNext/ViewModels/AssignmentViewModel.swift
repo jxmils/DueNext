@@ -15,6 +15,10 @@ class AssignmentViewModel: ObservableObject {
     private let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
 
     init() {
+        #if DEBUG
+        userDefaults?.removeObject(forKey: "assignments") // Clear cache for testing purposes
+        userDefaults?.removeObject(forKey: "nextAssignment")
+        #endif
         loadAssignments()
         updateNextDueAssignment()
     }
@@ -59,7 +63,14 @@ class AssignmentViewModel: ObservableObject {
             updateNextDueAssignment()
         }
     }
-    
+
+    // MARK: - Overall Completion Percentage for Workload Overview
+    var completionPercentage: Double {
+        let completedCount = assignments.filter { $0.isCompleted }.count
+        let totalCount = assignments.count
+        return totalCount > 0 ? (Double(completedCount) / Double(totalCount)) * 100 : 0
+    }
+
     // MARK: - Filtering Method for Main View
     enum AssignmentFilter {
         case today, tomorrow, thisWeek
@@ -80,5 +91,30 @@ class AssignmentViewModel: ObservableObject {
                 return calendar.isDate(assignment.dueDate, equalTo: today, toGranularity: .weekOfYear) && assignment.dueDate > today
             }
         }
+    }
+    
+    // MARK: - Weekly Calculations for Workload Overview
+
+    // Total assignments for the current week
+    var weeklyAssignmentsCount: Int {
+        assignments.filter { isWithinCurrentWeek($0.dueDate) }.count
+    }
+
+    // Completed assignments for the current week
+    var weeklyCompletedAssignmentsCount: Int {
+        assignments.filter { $0.isCompleted && isWithinCurrentWeek($0.dueDate) }.count
+    }
+
+    // Weekly completion percentage
+    var weeklyCompletionPercentage: Double {
+        let completed = weeklyCompletedAssignmentsCount
+        let total = weeklyAssignmentsCount
+        return total > 0 ? (Double(completed) / Double(total)) * 100 : 0
+    }
+    
+    // Helper to check if a date is within the current week
+    private func isWithinCurrentWeek(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        return calendar.isDate(date, equalTo: Date(), toGranularity: .weekOfYear)
     }
 }
