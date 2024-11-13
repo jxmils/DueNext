@@ -15,7 +15,7 @@ class AssignmentViewModel: ObservableObject {
     private let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
 
     // Predefined subjects list
-    let predefinedSubjects = ["Math", "Science", "History", "English", "Art"]
+    @Published var predefinedSubjects: [String] = ["Math", "Science", "History", "English", "Art"]
 
     @Published var customSubjects: [String] = []
 
