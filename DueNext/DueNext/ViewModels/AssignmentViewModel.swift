@@ -15,9 +15,8 @@ class AssignmentViewModel: ObservableObject {
     private let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
 
     // Predefined subjects list
-    let predefinedSubjects = ["Math", "Science", "History", "English", "Art", "Other"]
+    let predefinedSubjects = ["Math", "Science", "History", "English", "Art"]
 
-    // New property to store custom subjects created by users
     @Published var customSubjects: [String] = []
 
     // Combined list of predefined and custom subjects
@@ -29,8 +28,10 @@ class AssignmentViewModel: ObservableObject {
         #if DEBUG
         userDefaults?.removeObject(forKey: "assignments") // Clear cache for testing purposes
         userDefaults?.removeObject(forKey: "nextAssignment")
+        userDefaults?.removeObject(forKey: "customSubjects")
         #endif
         loadAssignments()
+        loadCustomSubjects()
         updateNextDueAssignment()
     }
 
@@ -52,6 +53,27 @@ class AssignmentViewModel: ObservableObject {
     func addCustomSubject(_ subject: String) {
         guard !customSubjects.contains(subject) else { return }
         customSubjects.append(subject)
+        saveCustomSubjects()
+    }
+    
+    func removeCustomSubject(_ subject: String) {
+        if let index = customSubjects.firstIndex(of: subject) {
+            customSubjects.remove(at: index)
+            saveCustomSubjects()
+        }
+    }
+    
+    private func saveCustomSubjects() {
+        if let encoded = try? JSONEncoder().encode(customSubjects) {
+            userDefaults?.set(encoded, forKey: "customSubjects")
+        }
+    }
+
+    private func loadCustomSubjects() {
+        if let data = userDefaults?.data(forKey: "customSubjects"),
+           let savedCustomSubjects = try? JSONDecoder().decode([String].self, from: data) {
+            customSubjects = savedCustomSubjects
+        }
     }
 
     private func updateNextDueAssignment() {
