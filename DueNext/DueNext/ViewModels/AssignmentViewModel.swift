@@ -1,10 +1,3 @@
-//
-//  AssignmentViewModel.swift
-//  DueNext
-//
-//  Created by Jason Miller on 11/4/24.
-//
-
 import Foundation
 import Combine
 
@@ -13,11 +6,25 @@ class AssignmentViewModel: ObservableObject {
     @Published var nextDueAssignment: Assignment?
     
     private let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
+    
+    private let predefinedSubjectsKey = "predefinedSubjects"
+    private let customSubjectsKey = "customSubjects"
 
-    // Predefined subjects list
-    @Published var predefinedSubjects: [String] = ["Math", "Science", "History", "English", "Art"]
-
-    @Published var customSubjects: [String] = []
+    // Predefined subjects list loaded from UserDefaults or set as defaults
+    @Published var predefinedSubjects: [String] = {
+        let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
+        if let savedPredefinedSubjects = userDefaults?.array(forKey: "predefinedSubjects") as? [String] {
+            return savedPredefinedSubjects
+        } else {
+            return ["Math", "Science", "History", "English", "Art"]
+        }
+    }()
+    
+    // Custom subjects loaded from UserDefaults or set as an empty array
+    @Published var customSubjects: [String] = {
+        let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
+        return userDefaults?.array(forKey: "customSubjects") as? [String] ?? []
+    }()
 
     // Combined list of predefined and custom subjects
     var allSubjects: [String] {
@@ -25,13 +32,7 @@ class AssignmentViewModel: ObservableObject {
     }
 
     init() {
-        #if DEBUG
-        userDefaults?.removeObject(forKey: "assignments") // Clear cache for testing purposes
-        userDefaults?.removeObject(forKey: "nextAssignment")
-        userDefaults?.removeObject(forKey: "customSubjects")
-        #endif
         loadAssignments()
-        loadCustomSubjects()
         updateNextDueAssignment()
     }
 
@@ -63,17 +64,14 @@ class AssignmentViewModel: ObservableObject {
         }
     }
     
-    private func saveCustomSubjects() {
-        if let encoded = try? JSONEncoder().encode(customSubjects) {
-            userDefaults?.set(encoded, forKey: "customSubjects")
-        }
+    // Save predefined subjects to UserDefaults
+    private func savePredefinedSubjects() {
+        userDefaults?.set(predefinedSubjects, forKey: predefinedSubjectsKey)
     }
 
-    private func loadCustomSubjects() {
-        if let data = userDefaults?.data(forKey: "customSubjects"),
-           let savedCustomSubjects = try? JSONDecoder().decode([String].self, from: data) {
-            customSubjects = savedCustomSubjects
-        }
+    // Save custom subjects to UserDefaults
+    private func saveCustomSubjects() {
+        userDefaults?.set(customSubjects, forKey: customSubjectsKey)
     }
 
     private func updateNextDueAssignment() {
