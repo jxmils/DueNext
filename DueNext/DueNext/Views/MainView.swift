@@ -44,6 +44,7 @@ struct MainView: View {
                     }
                     .padding(.horizontal)
                 }
+                .background(Color(.systemGroupedBackground)) // Match background to list style
                 .navigationTitle("DueNext")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -69,6 +70,7 @@ struct MainView: View {
                     viewModel.loadAssignments()
                 }
             }
+            .background(Color(.systemGroupedBackground)) // Match background
         }
     }
 }
@@ -87,7 +89,7 @@ struct AssignmentSection: View {
                 .padding(.leading)
 
             ForEach(assignments) { assignment in
-                AssignmentCard(assignment: assignment, viewModel: viewModel)
+                SwipeableAssignmentCard(assignment: assignment, viewModel: viewModel)
             }
         }
         .padding(.bottom)
