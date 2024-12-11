@@ -14,8 +14,10 @@ class AssignmentViewModel: ObservableObject {
     @Published var predefinedSubjects: [String] = {
         let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
         if let savedPredefinedSubjects = userDefaults?.array(forKey: "predefinedSubjects") as? [String] {
+            print("DEBUG: Loaded predefined subjects from UserDefaults: \(savedPredefinedSubjects)")
             return savedPredefinedSubjects
         } else {
+            print("DEBUG: Using default predefined subjects.")
             return ["Math", "Science", "History", "English", "Art"]
         }
     }()
@@ -23,7 +25,13 @@ class AssignmentViewModel: ObservableObject {
     // Custom subjects loaded from UserDefaults or set as an empty array
     @Published var customSubjects: [String] = {
         let userDefaults = UserDefaults(suiteName: "group.com.jasonmiller.DueNext")
-        return userDefaults?.array(forKey: "customSubjects") as? [String] ?? []
+        if let savedCustomSubjects = userDefaults?.array(forKey: "customSubjects") as? [String] {
+            print("DEBUG: Loaded custom subjects from UserDefaults: \(savedCustomSubjects)")
+            return savedCustomSubjects
+        } else {
+            print("DEBUG: No custom subjects found. Using an empty list.")
+            return []
+        }
     }()
 
     // Combined list of predefined and custom subjects
@@ -32,6 +40,7 @@ class AssignmentViewModel: ObservableObject {
     }
 
     init() {
+        print("DEBUG: Initializing AssignmentViewModel.")
         loadAssignments()
         updateNextDueAssignment()
     }
@@ -39,56 +48,85 @@ class AssignmentViewModel: ObservableObject {
     func addAssignment(title: String, dueDate: Date, subject: String) {
         let newAssignment = Assignment(title: title, dueDate: dueDate, subject: subject)
         assignments.append(newAssignment)
-        saveAssignments()           // Save all assignments after adding
-        updateNextDueAssignment()    // Update the next due assignment
+        print("DEBUG: Added assignment: \(newAssignment)")
+        saveAssignments()
+        updateNextDueAssignment()
     }
 
     func toggleCompletion(for assignment: Assignment) {
         if let index = assignments.firstIndex(where: { $0.id == assignment.id }) {
-            assignments[index].isCompleted.toggle() // Toggle the completed status
-            saveAssignments()                       // Save updated completion status
-            updateNextDueAssignment()               // Update next due assignment if needed
+            assignments[index].isCompleted.toggle()
+            print("DEBUG: Toggled completion for assignment: \(assignments[index])")
+            saveAssignments()
+            updateNextDueAssignment()
         }
     }
 
     func addCustomSubject(_ subject: String) {
-        guard !customSubjects.contains(subject) else { return }
+        print("DEBUG: Attempting to add custom subject: \(subject). Current list: \(customSubjects)")
+        guard !customSubjects.contains(subject) else {
+            print("DEBUG: Subject already exists: \(subject)")
+            return
+        }
         customSubjects.append(subject)
-        saveCustomSubjects()
+        print("DEBUG: Custom subject added: \(subject). Updated list: \(customSubjects)")
+        saveCustomSubjects() // Ensure this is called
     }
     
     func removeCustomSubject(_ subject: String) {
+        print("DEBUG: Attempting to remove custom subject: \(subject). Current list: \(customSubjects)")
         if let index = customSubjects.firstIndex(of: subject) {
             customSubjects.remove(at: index)
-            saveCustomSubjects()
+            print("DEBUG: Custom subject removed: \(subject). Updated list: \(customSubjects)")
+            saveCustomSubjects() // Ensure this is called
+        } else {
+            print("DEBUG: Subject not found: \(subject).")
         }
     }
     
-    // Save predefined subjects to UserDefaults
+    func addPredefinedSubject(_ subject: String) {
+        guard !predefinedSubjects.contains(subject) else {
+            print("DEBUG: Attempted to add duplicate predefined subject: \(subject)")
+            return
+        }
+        predefinedSubjects.append(subject)
+        savePredefinedSubjects()
+    }
+    
     private func savePredefinedSubjects() {
         userDefaults?.set(predefinedSubjects, forKey: predefinedSubjectsKey)
+        print("DEBUG: Saved predefined subjects: \(predefinedSubjects)")
     }
 
-    // Save custom subjects to UserDefaults
+    func removePredefinedSubject(_ subject: String) {
+        if let index = predefinedSubjects.firstIndex(of: subject) {
+            predefinedSubjects.remove(at: index)
+            savePredefinedSubjects()
+        } else {
+            print("DEBUG: Attempted to remove non-existent predefined subject: \(subject)")
+        }
+    }
+    
     private func saveCustomSubjects() {
         userDefaults?.set(customSubjects, forKey: customSubjectsKey)
+        print("DEBUG: Saved custom subjects: \(customSubjects)")
     }
 
     private func updateNextDueAssignment() {
         nextDueAssignment = assignments
-            .filter { $0.dueDate > Date() && !$0.isCompleted } // Only include future, incomplete assignments
+            .filter { $0.dueDate > Date() && !$0.isCompleted }
             .min(by: { $0.dueDate < $1.dueDate })
 
-        // Save the next due assignment to UserDefaults
         if let nextDue = nextDueAssignment, let encoded = try? JSONEncoder().encode(nextDue) {
             userDefaults?.set(encoded, forKey: "nextAssignment")
+            print("DEBUG: Updated next due assignment: \(nextDue)")
         }
     }
 
     private func saveAssignments() {
-        // Save the list of assignments to UserDefaults
         if let encoded = try? JSONEncoder().encode(assignments) {
             userDefaults?.set(encoded, forKey: "assignments")
+            print("DEBUG: Saved assignments to UserDefaults.")
         }
     }
 
@@ -96,7 +134,10 @@ class AssignmentViewModel: ObservableObject {
         if let data = userDefaults?.data(forKey: "assignments"),
            let savedAssignments = try? JSONDecoder().decode([Assignment].self, from: data) {
             assignments = savedAssignments
+            print("DEBUG: Loaded assignments from UserDefaults: \(assignments)")
             updateNextDueAssignment()
+        } else {
+            print("DEBUG: No assignments found in UserDefaults.")
         }
     }
 
@@ -104,6 +145,7 @@ class AssignmentViewModel: ObservableObject {
     var completionPercentage: Double {
         let completedCount = assignments.filter { $0.isCompleted }.count
         let totalCount = assignments.count
+        print("DEBUG: Completion percentage calculated. Completed: \(completedCount), Total: \(totalCount)")
         return totalCount > 0 ? (Double(completedCount) / Double(totalCount)) * 100 : 0
     }
 
@@ -116,8 +158,8 @@ class AssignmentViewModel: ObservableObject {
         let calendar = Calendar.current
         let today = Date()
         
-        return assignments.filter { assignment in
-            guard !assignment.isCompleted else { return false } // Filter out completed assignments
+        let filtered = assignments.filter { assignment in
+            guard !assignment.isCompleted else { return false }
             switch filter {
             case .today:
                 return calendar.isDateInToday(assignment.dueDate)
@@ -127,30 +169,34 @@ class AssignmentViewModel: ObservableObject {
                 return calendar.isDate(assignment.dueDate, equalTo: today, toGranularity: .weekOfYear) && assignment.dueDate > today
             }
         }
+        print("DEBUG: Filtered assignments for \(filter): \(filtered)")
+        return filtered
     }
     
     // MARK: - Weekly Calculations for Workload Overview
-
-    // Total assignments for the current week
     var weeklyAssignmentsCount: Int {
-        assignments.filter { isWithinCurrentWeek($0.dueDate) }.count
+        let count = assignments.filter { isWithinCurrentWeek($0.dueDate) }.count
+        print("DEBUG: Weekly assignments count: \(count)")
+        return count
     }
 
-    // Completed assignments for the current week
     var weeklyCompletedAssignmentsCount: Int {
-        assignments.filter { $0.isCompleted && isWithinCurrentWeek($0.dueDate) }.count
+        let count = assignments.filter { $0.isCompleted && isWithinCurrentWeek($0.dueDate) }.count
+        print("DEBUG: Weekly completed assignments count: \(count)")
+        return count
     }
 
-    // Weekly completion percentage
     var weeklyCompletionPercentage: Double {
         let completed = weeklyCompletedAssignmentsCount
         let total = weeklyAssignmentsCount
+        print("DEBUG: Weekly completion percentage calculated. Completed: \(completed), Total: \(total)")
         return total > 0 ? (Double(completed) / Double(total)) * 100 : 0
     }
     
-    // Helper to check if a date is within the current week
     private func isWithinCurrentWeek(_ date: Date) -> Bool {
         let calendar = Calendar.current
-        return calendar.isDate(date, equalTo: Date(), toGranularity: .weekOfYear)
+        let isWithinWeek = calendar.isDate(date, equalTo: Date(), toGranularity: .weekOfYear)
+        print("DEBUG: Checking if date \(date) is within the current week: \(isWithinWeek)")
+        return isWithinWeek
     }
 }

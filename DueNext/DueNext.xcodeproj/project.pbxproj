@@ -184,7 +184,6 @@
 				1B0DE1902CDA035100724E91 /* Services */,
 				1B0DE17F2CD9EDD800724E91 /* ViewModels */,
 				1B0DE17E2CD9EC9300724E91 /* DueNext.entitlements */,
-				1B0DE17A2CD9E8ED00724E91 /* Controllers */,
 				1B0DE1792CD9E8E400724E91 /* Views */,
 				1B0DE1782CD9E8DE00724E91 /* Models */,
 				1B0DE1312CD9E7B600724E91 /* DueNextApp.swift */,
@@ -260,13 +259,6 @@
 				1B0DE1942CDA03A600724E91 /* AssignmentCardView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		1B0DE17A2CD9E8ED00724E91 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 		1B0DE17F2CD9EDD800724E91 /* ViewModels */ = {

@@ -51,7 +51,7 @@ struct AddAssignmentView: View {
 
                 Button("Add Subject") {
                     if !customSubject.isEmpty && !viewModel.allSubjects.contains(customSubject) {
-                        viewModel.customSubjects.append(customSubject)
+                        viewModel.addCustomSubject(customSubject) // Use the method to save the subject
                         customSubject = "" // Clear input
                     }
                 }
@@ -75,15 +75,15 @@ struct AddAssignmentView: View {
         }
     }
 
-    // Delete function for subjects
     private func deleteSubject(at offsets: IndexSet) {
         for index in offsets {
             let subject = viewModel.allSubjects[index]
             if let predefinedIndex = viewModel.predefinedSubjects.firstIndex(of: subject) {
-                viewModel.predefinedSubjects.remove(at: predefinedIndex)
+                viewModel.removePredefinedSubject(subject) // Persist removal
             } else if let customIndex = viewModel.customSubjects.firstIndex(of: subject) {
-                viewModel.customSubjects.remove(at: customIndex)
+                viewModel.removeCustomSubject(subject) // Persist removal
             }
         }
     }
+
 }
