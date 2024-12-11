@@ -20,27 +20,30 @@ struct MainView: View {
                     .bold()
                     .padding(.leading)
                     .padding(.top)
-                
-                List {
-                    // Today Section
-                    let todayAssignments = viewModel.filteredAssignments(for: .today)
-                    if !todayAssignments.isEmpty {
-                        AssignmentSection(title: "Today", assignments: todayAssignments, viewModel: viewModel)
+
+                // Custom Scrollable Assignment List
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        // Today Section
+                        let todayAssignments = viewModel.filteredAssignments(for: .today)
+                        if !todayAssignments.isEmpty {
+                            AssignmentSection(title: "Today", assignments: todayAssignments, viewModel: viewModel)
+                        }
+
+                        // Tomorrow Section
+                        let tomorrowAssignments = viewModel.filteredAssignments(for: .tomorrow)
+                        if !tomorrowAssignments.isEmpty {
+                            AssignmentSection(title: "Tomorrow", assignments: tomorrowAssignments, viewModel: viewModel)
+                        }
+
+                        // This Week Section
+                        let weekAssignments = viewModel.filteredAssignments(for: .thisWeek)
+                        if !weekAssignments.isEmpty {
+                            AssignmentSection(title: "This Week", assignments: weekAssignments, viewModel: viewModel)
+                        }
                     }
-                    
-                    // Tomorrow Section
-                    let tomorrowAssignments = viewModel.filteredAssignments(for: .tomorrow)
-                    if !tomorrowAssignments.isEmpty {
-                        AssignmentSection(title: "Tomorrow", assignments: tomorrowAssignments, viewModel: viewModel)
-                    }
-                    
-                    // This Week Section
-                    let weekAssignments = viewModel.filteredAssignments(for: .thisWeek)
-                    if !weekAssignments.isEmpty {
-                        AssignmentSection(title: "This Week", assignments: weekAssignments, viewModel: viewModel)
-                    }
+                    .padding(.horizontal)
                 }
-                .listStyle(InsetGroupedListStyle())
                 .navigationTitle("DueNext")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -70,29 +73,23 @@ struct MainView: View {
     }
 }
 
-// Assignment Section
+// Updated Assignment Section
 struct AssignmentSection: View {
     var title: String
     var assignments: [Assignment]
-    @ObservedObject var viewModel: AssignmentViewModel // Add view model to manage completion
+    @ObservedObject var viewModel: AssignmentViewModel
 
     var body: some View {
-        Section(header: Text(title)
-                    .font(.title3)
-                    .bold()
-                    .foregroundColor(.primary)) {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.title3)
+                .bold()
+                .padding(.leading)
+
             ForEach(assignments) { assignment in
-                AssignmentCard(assignment: assignment)
-                    .padding(.vertical, 4)
-                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                        Button(action: {
-                            viewModel.toggleCompletion(for: assignment)
-                        }) {
-                            Label("Complete", systemImage: "checkmark.circle")
-                        }
-                        .tint(.green)
-                    }
+                AssignmentCard(assignment: assignment, viewModel: viewModel)
             }
         }
+        .padding(.bottom)
     }
 }
