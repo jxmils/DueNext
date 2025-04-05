@@ -22,12 +22,14 @@ struct AddAssignmentView: View {
         NavigationView {
             VStack(spacing: 20) {
                 // Assignment Title
-                TextField("Assignment Title", text: $title)
-                    .font(.title3)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
-                    .padding(.horizontal)
+                HStack {
+                    TextField("Assignment Title", text: $title)
+                        .font(.title3)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                }
+                .padding(.horizontal)
 
                 // Due Date and Time
                 VStack(spacing: 16) {
@@ -174,10 +176,12 @@ struct AddAssignmentView: View {
                     DatePicker("Select Date", selection: $dueDate, displayedComponents: .date)
                         .datePickerStyle(GraphicalDatePickerStyle())
                         .padding()
-                        .onChange(of: dueDate) { _ in
+                        .onChange(of: dueDate) { newValue, transaction in
                             showDatePicker = false
                         }
+                    Spacer()
                 }
+                .frame(minHeight: 400)
                 .presentationDetents([.medium])
             }
             .sheet(isPresented: $showTimePicker) {

@@ -13,12 +13,14 @@ class Assignment: Identifiable, Codable, ObservableObject {
     var dueDate: Date
     var subject: String // New subject property
     var isCompleted: Bool // Removed `@Published` for `Codable` compatibility
+    var completionDate: Date? = nil
 
-    init(title: String, dueDate: Date, subject: String, isCompleted: Bool = false) {
+    init(title: String, dueDate: Date, subject: String, isCompleted: Bool = false, completionDate: Date? = nil) {
         self.title = title
         self.dueDate = dueDate
         self.subject = subject
         self.isCompleted = isCompleted
+        self.completionDate = completionDate
     }
 
     // MARK: - Codable Conformance
@@ -29,6 +31,7 @@ class Assignment: Identifiable, Codable, ObservableObject {
         case dueDate
         case subject
         case isCompleted
+        case completionDate
     }
 
     required init(from decoder: Decoder) throws {
@@ -38,6 +41,7 @@ class Assignment: Identifiable, Codable, ObservableObject {
         dueDate = try container.decode(Date.self, forKey: .dueDate)
         subject = try container.decode(String.self, forKey: .subject)
         isCompleted = try container.decode(Bool.self, forKey: .isCompleted)
+        completionDate = try container.decodeIfPresent(Date.self, forKey: .completionDate)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -47,5 +51,6 @@ class Assignment: Identifiable, Codable, ObservableObject {
         try container.encode(dueDate, forKey: .dueDate)
         try container.encode(subject, forKey: .subject)
         try container.encode(isCompleted, forKey: .isCompleted)
+        try container.encode(completionDate, forKey: .completionDate)
     }
 }

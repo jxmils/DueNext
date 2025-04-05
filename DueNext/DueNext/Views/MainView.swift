@@ -15,10 +15,10 @@ struct MainView: View {
         NavigationView {
             VStack(alignment: .leading) {
                 // Header Section
-                Text("Upcoming Assignments")
+                Text("DueNext Dashboard")
                     .font(.largeTitle)
                     .bold()
-                    .padding(.leading)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.top)
 
                 // Custom Scrollable Assignment List
@@ -45,7 +45,6 @@ struct MainView: View {
                     .padding(.horizontal)
                 }
                 .background(Color(.systemGroupedBackground)) // Match background to list style
-                .navigationTitle("DueNext")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         NavigationLink(destination: WorkloadView(viewModel: viewModel)) {

@@ -55,7 +55,15 @@ class AssignmentViewModel: ObservableObject {
 
     func toggleCompletion(for assignment: Assignment) {
         if let index = assignments.firstIndex(where: { $0.id == assignment.id }) {
-            assignments[index].isCompleted.toggle()
+            if !assignments[index].isCompleted {
+                // Marking as complete: set completionDate to now
+                assignments[index].isCompleted = true
+                assignments[index].completionDate = Date()
+            } else {
+                // Marking as incomplete: clear the completionDate
+                assignments[index].isCompleted = false
+                assignments[index].completionDate = nil
+            }
             print("DEBUG: Toggled completion for assignment: \(assignments[index])")
             saveAssignments()
             updateNextDueAssignment()
@@ -81,6 +89,15 @@ class AssignmentViewModel: ObservableObject {
             saveCustomSubjects() // Ensure this is called
         } else {
             print("DEBUG: Subject not found: \(subject).")
+        }
+    }
+    
+    func delete(_ assignment: Assignment) {
+        if let index = assignments.firstIndex(where: { $0.id == assignment.id }) {
+            assignments.remove(at: index)
+            print("DEBUG: Deleted assignment: \(assignment)")
+            saveAssignments()
+            updateNextDueAssignment()
         }
     }
     
@@ -193,7 +210,29 @@ class AssignmentViewModel: ObservableObject {
         return total > 0 ? (Double(completed) / Double(total)) * 100 : 0
     }
     
+    var weeklyCompletedOnTimeCount: Int {
+        let calendar = Calendar.current
+        // Get the start of the current week (using yearForWeekOfYear and weekOfYear)
+        guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())),
+              let weekEnd = calendar.date(byAdding: .day, value: 7, to: weekStart)
+        else {
+            return 0
+        }
+        
+        return assignments.filter { assignment in
+            // Skip assignments with an invalid due date
+            if assignment.dueDate.timeIntervalSince1970 == 0 { return false }
+            guard let completionDate = assignment.completionDate else { return false }
+            // Check if the assignment's due date falls within the current week
+            let isDueThisWeek = assignment.dueDate >= weekStart && assignment.dueDate < weekEnd
+            // Consider it on time if it was completed on or before the due date
+            return isDueThisWeek && (completionDate <= assignment.dueDate)
+        }.count
+    }
+    
     private func isWithinCurrentWeek(_ date: Date) -> Bool {
+        // Return false if the date is invalid
+        if date.timeIntervalSince1970 == 0 { return false }
         let calendar = Calendar.current
         let isWithinWeek = calendar.isDate(date, equalTo: Date(), toGranularity: .weekOfYear)
         print("DEBUG: Checking if date \(date) is within the current week: \(isWithinWeek)")
