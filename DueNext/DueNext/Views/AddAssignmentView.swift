@@ -22,13 +22,19 @@ struct AddAssignmentView: View {
         NavigationView {
             VStack(spacing: 20) {
                 // Assignment Title
-                HStack {
-                    TextField("Assignment Title", text: $title)
-                        .font(.title3)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(12)
+                GeometryReader { geometry in
+                    HStack {
+                        TextField("Assignment Title", text: $title)
+                            .disableAutocorrection(true)
+                            .font(.title3)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                            .frame(height: 44)
+                            .frame(width: geometry.size.width)
+                    }
                 }
+                .frame(height: 44)
                 .padding(.horizontal)
 
                 // Due Date and Time
@@ -172,16 +178,18 @@ struct AddAssignmentView: View {
             }
             .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
             .sheet(isPresented: $showDatePicker) {
-                VStack {
-                    DatePicker("Select Date", selection: $dueDate, displayedComponents: .date)
-                        .datePickerStyle(GraphicalDatePickerStyle())
-                        .padding()
-                        .onChange(of: dueDate) { newValue, transaction in
-                            showDatePicker = false
-                        }
-                    Spacer()
+                GeometryReader { geometry in
+                    VStack {
+                        DatePicker("Select Date", selection: $dueDate, displayedComponents: .date)
+                            .datePickerStyle(GraphicalDatePickerStyle())
+                            .padding()
+                            .onChange(of: dueDate) { newValue, transaction in
+                                showDatePicker = false
+                            }
+                        Spacer()
+                    }
+                    .frame(minHeight: 500)
                 }
-                .frame(minHeight: 400)
                 .presentationDetents([.medium])
             }
             .sheet(isPresented: $showTimePicker) {
