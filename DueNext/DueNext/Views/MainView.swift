@@ -11,6 +11,11 @@ struct MainView: View {
     @StateObject private var viewModel = AssignmentViewModel()
     @State private var isAddingNewAssignment = false
 
+    // Computed lists
+    private var incompleteAssignments: [Assignment] {
+        viewModel.assignments.filter { !$0.isCompleted }
+    }
+
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
@@ -21,30 +26,87 @@ struct MainView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.top)
 
-                // Custom Scrollable Assignment List
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        // Today Section
-                        let todayAssignments = viewModel.filteredAssignments(for: .today)
-                        if !todayAssignments.isEmpty {
-                            AssignmentSection(title: "Today", assignments: todayAssignments, viewModel: viewModel)
-                        }
+                // Placeholder or content
+                ZStack {
+                    // 1️⃣ Never added any assignments
+                    if viewModel.assignments.isEmpty {
+                        VStack(spacing: 12) {
+                            Image(systemName: "tray")
+                                .font(.system(size: 60))
+                                .foregroundColor(.gray.opacity(0.3))
 
-                        // Tomorrow Section
-                        let tomorrowAssignments = viewModel.filteredAssignments(for: .tomorrow)
-                        if !tomorrowAssignments.isEmpty {
-                            AssignmentSection(title: "Tomorrow", assignments: tomorrowAssignments, viewModel: viewModel)
-                        }
+                            Text("No tasks added yet")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.gray)
 
-                        // This Week Section
-                        let weekAssignments = viewModel.filteredAssignments(for: .thisWeek)
-                        if !weekAssignments.isEmpty {
-                            AssignmentSection(title: "This Week", assignments: weekAssignments, viewModel: viewModel)
+                            Text("Tap the + sign to get started!")
+                                .font(.body)
+                                .foregroundColor(.gray.opacity(0.8))
+                        }
+                        .multilineTextAlignment(.center)
+                        .padding()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                    // 2️⃣ All tasks completed
+                    } else if incompleteAssignments.isEmpty {
+                        VStack(spacing: 12) {
+                            Image(systemName: "checkmark.seal.fill")
+                                .font(.system(size: 60))
+                                .foregroundColor(.green.opacity(0.7))
+
+                            Text("All done for now!")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.green)
+
+                            Text("Great job! Tap + to add more.")
+                                .font(.body)
+                                .foregroundColor(.gray.opacity(0.8))
+                        }
+                        .multilineTextAlignment(.center)
+                        .padding()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                    // 3️⃣ Show the actual assignment sections
+                    } else {
+                        ScrollView {
+                            LazyVStack(spacing: 16) {
+                                // Today Section
+                                let todayAssignments = viewModel.filteredAssignments(for: .today)
+                                if !todayAssignments.isEmpty {
+                                    AssignmentSection(
+                                        title: "Today",
+                                        assignments: todayAssignments,
+                                        viewModel: viewModel
+                                    )
+                                }
+
+                                // Tomorrow Section
+                                let tomorrowAssignments = viewModel.filteredAssignments(for: .tomorrow)
+                                if !tomorrowAssignments.isEmpty {
+                                    AssignmentSection(
+                                        title: "Tomorrow",
+                                        assignments: tomorrowAssignments,
+                                        viewModel: viewModel
+                                    )
+                                }
+
+                                // This Week Section
+                                let weekAssignments = viewModel.filteredAssignments(for: .thisWeek)
+                                if !weekAssignments.isEmpty {
+                                    AssignmentSection(
+                                        title: "This Week",
+                                        assignments: weekAssignments,
+                                        viewModel: viewModel
+                                    )
+                                }
+                            }
+                            .padding(.horizontal)
                         }
                     }
-                    .padding(.horizontal)
                 }
-                .background(Color(.systemGroupedBackground)) // Match background to list style
+                .background(Color(.systemGroupedBackground))
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         NavigationLink(destination: WorkloadView(viewModel: viewModel)) {
@@ -54,9 +116,9 @@ struct MainView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
+                        Button {
                             isAddingNewAssignment = true
-                        }) {
+                        } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title)
                         }
@@ -69,12 +131,13 @@ struct MainView: View {
                     viewModel.loadAssignments()
                 }
             }
-            .background(Color(.systemGroupedBackground)) // Match background
+            .background(Color(.systemGroupedBackground))
         }
     }
 }
 
-// Updated Assignment Section
+// MARK: - AssignmentSection
+
 struct AssignmentSection: View {
     var title: String
     var assignments: [Assignment]

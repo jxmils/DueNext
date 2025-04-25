@@ -10,7 +10,9 @@ import SwiftUI
 struct AddAssignmentView: View {
     @ObservedObject var viewModel: AssignmentViewModel
     @State private var title: String = ""
-    @State private var dueDate: Date = Calendar.current.date(bySettingHour: 23, minute: 59, second: 0, of: Date()) ?? Date()
+    @State private var dueDate: Date = Calendar.current.date(
+        bySettingHour: 23, minute: 59, second: 0, of: Date()
+    ) ?? Date()
     @State private var selectedSubject: String?
     @State private var newSubject: String = ""
     @State private var isAddingSubject: Bool = false
@@ -21,32 +23,30 @@ struct AddAssignmentView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                // Assignment Title
-                GeometryReader { geometry in
-                    HStack {
-                        TextField("Assignment Title", text: $title)
-                            .disableAutocorrection(true)
-                            .font(.title3)
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(12)
-                            .frame(height: 44)
-                            .frame(width: geometry.size.width)
-                    }
+
+                // MARK: Title
+                GeometryReader { geo in
+                    TextField("Assignment Title", text: $title)
+                        .disableAutocorrection(true)
+                        .font(.title3)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                        .frame(width: geo.size.width, height: 44)
                 }
                 .frame(height: 44)
                 .padding(.horizontal)
 
-                // Due Date and Time
+                // MARK: Due Date & Time
                 VStack(spacing: 16) {
                     Text("Due Date & Time")
                         .font(.headline)
                         .foregroundColor(.secondary)
 
                     HStack(spacing: 16) {
-                        Button(action: {
+                        Button {
                             showDatePicker = true
-                        }) {
+                        } label: {
                             Text("📅 \(dueDate, formatter: dateFormatter)")
                                 .frame(maxWidth: .infinity)
                                 .font(.body)
@@ -56,9 +56,9 @@ struct AddAssignmentView: View {
                                 .cornerRadius(12)
                         }
 
-                        Button(action: {
+                        Button {
                             showTimePicker = true
-                        }) {
+                        } label: {
                             Text("⏰ \(dueDate, formatter: timeFormatter)")
                                 .frame(maxWidth: .infinity)
                                 .font(.body)
@@ -71,59 +71,18 @@ struct AddAssignmentView: View {
                     .padding(.horizontal)
                 }
 
-                // Subjects
+                // MARK: Subjects
                 VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Subjects")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
+                    Text("Subjects")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal)
 
-                        Spacer()
-
-                        // Plus Sign Expanding to Input
-                        HStack {
-                            if isAddingSubject {
-                                TextField("New Subject", text: $newSubject)
-                                    .font(.body)
-                                    .padding()
-                                    .background(Color(.systemGray6))
-                                    .cornerRadius(12)
-                                    .transition(.scale)
-
-                                Button(action: {
-                                    if !newSubject.isEmpty && !viewModel.allSubjects.contains(newSubject) {
-                                        viewModel.addCustomSubject(newSubject)
-                                        newSubject = ""
-                                    }
-                                    withAnimation {
-                                        isAddingSubject = false
-                                    }
-                                }) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.title2)
-                                        .foregroundColor(.blue)
-                                }
-                            } else {
-                                Button(action: {
-                                    withAnimation {
-                                        isAddingSubject = true
-                                    }
-                                }) {
-                                    Image(systemName: "plus.circle.fill")
-                                        .font(.title2)
-                                        .foregroundColor(.blue)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-
-                    // Subject List with Swipe-to-Delete
                     List {
+                        // 1️⃣ Existing subjects
                         ForEach(viewModel.allSubjects, id: \.self) { subject in
                             HStack {
                                 Text(subject)
-                                    .font(.body)
                                     .foregroundColor(subject == selectedSubject ? .white : .primary)
                                 Spacer()
                                 if subject == selectedSubject {
@@ -131,7 +90,7 @@ struct AddAssignmentView: View {
                                         .foregroundColor(.white)
                                 }
                             }
-                            .padding()
+                            .padding(8)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(subject == selectedSubject ? Color.blue : Color.clear)
@@ -141,21 +100,62 @@ struct AddAssignmentView: View {
                             }
                         }
                         .onDelete(perform: deleteSubject)
+
+                        // 2️⃣ Add-New-Subject row
+                        if isAddingSubject {
+                            HStack {
+                                TextField("New Subject", text: $newSubject)
+                                    .autocapitalization(.words)
+                                    .padding(.vertical, 8)
+                                Button {
+                                    let trimmed = newSubject.trimmingCharacters(in: .whitespaces)
+                                    guard !trimmed.isEmpty,
+                                          !viewModel.allSubjects.contains(trimmed)
+                                    else { return }
+                                    viewModel.addCustomSubject(trimmed)
+                                    selectedSubject = trimmed
+                                    newSubject = ""
+                                    withAnimation { isAddingSubject = false }
+                                } label: {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.title2)
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                            .padding(.vertical, 4)
+
+                        } else {
+                            HStack {
+                                Image(systemName: "plus.circle")
+                                    .foregroundColor(.blue)
+                                Text("Add New Subject")
+                                    .foregroundColor(.blue)
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                withAnimation { isAddingSubject = true }
+                            }
+                            .padding(.vertical, 8)
+                        }
                     }
                     .listStyle(InsetGroupedListStyle())
+                    // Ensure the list is tall enough to always show at least the "Add New Subject" row
+                    .frame(minHeight: 80, maxHeight: 300)
                 }
 
                 Spacer()
 
-                // Add Assignment Button
-                Button(action: {
-                    if let subject = selectedSubject, viewModel.allSubjects.contains(subject) {
-                        viewModel.addAssignment(title: title, dueDate: dueDate, subject: subject)
-                        presentationMode.wrappedValue.dismiss()
-                    } else {
-                        selectedSubject = nil // Ensure no invalid subject is selected
+                // MARK: Add Assignment Button
+                Button {
+                    guard let subject = selectedSubject,
+                          viewModel.allSubjects.contains(subject) else {
+                        selectedSubject = nil
+                        return
                     }
-                }) {
+                    viewModel.addAssignment(title: title, dueDate: dueDate, subject: subject)
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
                     Text("Add Assignment")
                         .bold()
                         .frame(maxWidth: .infinity)
@@ -176,60 +176,89 @@ struct AddAssignmentView: View {
                     }
                 }
             }
-            .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
+            .background(Color(.systemGroupedBackground).ignoresSafeArea())
             .sheet(isPresented: $showDatePicker) {
-                GeometryReader { geometry in
-                    VStack {
-                        DatePicker("Select Date", selection: $dueDate, displayedComponents: .date)
-                            .datePickerStyle(GraphicalDatePickerStyle())
-                            .padding()
-                            .onChange(of: dueDate) { newValue, transaction in
-                                showDatePicker = false
-                            }
-                        Spacer()
-                    }
-                    .frame(minHeight: 500)
-                }
-                .presentationDetents([.medium])
+                DatePickerSheet(dueDate: $dueDate, isPresented: $showDatePicker)
             }
             .sheet(isPresented: $showTimePicker) {
-                VStack {
-                    DatePicker("Select Time", selection: $dueDate, displayedComponents: .hourAndMinute)
-                        .datePickerStyle(WheelDatePickerStyle())
-                        .padding()
-                    Button("Done") {
-                        showTimePicker = false
-                    }
-                    .padding()
-                }
-                .presentationDetents([.medium])
+                TimePickerSheet(dueDate: $dueDate, isPresented: $showTimePicker)
             }
         }
     }
 
+    // MARK: Helpers
+
     private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        return f
     }
 
     private var timeFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        return formatter
+        let f = DateFormatter()
+        f.timeStyle = .short
+        return f
     }
 
     private func deleteSubject(at offsets: IndexSet) {
         for index in offsets {
             let subject = viewModel.allSubjects[index]
-            if subject == selectedSubject {
-                selectedSubject = nil // Clear the selected subject
-            }
             if viewModel.predefinedSubjects.contains(subject) {
                 viewModel.removePredefinedSubject(subject)
-            } else if viewModel.customSubjects.contains(subject) {
+            } else {
                 viewModel.removeCustomSubject(subject)
             }
+            if selectedSubject == subject {
+                selectedSubject = nil
+            }
         }
+    }
+}
+
+// MARK: - DatePickerSheet
+
+private struct DatePickerSheet: View {
+    @Binding var dueDate: Date
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        VStack {
+            DatePicker(
+                "Select Date",
+                selection: $dueDate,
+                displayedComponents: .date
+            )
+            .datePickerStyle(GraphicalDatePickerStyle())
+            .padding()
+            Button("Done") {
+                isPresented = false
+            }
+            .padding()
+        }
+        .presentationDetents([.medium])
+    }
+}
+
+// MARK: - TimePickerSheet
+
+private struct TimePickerSheet: View {
+    @Binding var dueDate: Date
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        VStack {
+            DatePicker(
+                "Select Time",
+                selection: $dueDate,
+                displayedComponents: .hourAndMinute
+            )
+            .datePickerStyle(WheelDatePickerStyle())
+            .padding()
+            Button("Done") {
+                isPresented = false
+            }
+            .padding()
+        }
+        .presentationDetents([.medium])
     }
 }
