@@ -44,6 +44,10 @@
 		1B0DE1A12CDA085D00724E91 /* WorkloadProgressRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE19F2CDA085D00724E91 /* WorkloadProgressRingView.swift */; };
 		1B0DE1A32CDA089100724E91 /* AssignmentSummaryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1A22CDA089100724E91 /* AssignmentSummaryCardView.swift */; };
 		1B0DE1A42CDA089100724E91 /* AssignmentSummaryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DE1A22CDA089100724E91 /* AssignmentSummaryCardView.swift */; };
+		1BAF54652DBB51DF00E3655D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1BAF54642DBB51D900E3655D /* README.md */; };
+		1BAF54662DBB51DF00E3655D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1BAF54642DBB51D900E3655D /* README.md */; };
+		1BAF54682DBB52FD00E3655D /* BRAINSTORMING.md in Resources */ = {isa = PBXBuildFile; fileRef = 1BAF54672DBB52F400E3655D /* BRAINSTORMING.md */; };
+		1BAF54692DBB52FD00E3655D /* BRAINSTORMING.md in Resources */ = {isa = PBXBuildFile; fileRef = 1BAF54672DBB52F400E3655D /* BRAINSTORMING.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +121,8 @@
 		1B0DE19B2CDA076700724E91 /* WorkloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkloadView.swift; sourceTree = "<group>"; };
 		1B0DE19F2CDA085D00724E91 /* WorkloadProgressRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkloadProgressRingView.swift; sourceTree = "<group>"; };
 		1B0DE1A22CDA089100724E91 /* AssignmentSummaryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentSummaryCardView.swift; sourceTree = "<group>"; };
+		1BAF54642DBB51D900E3655D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1BAF54672DBB52F400E3655D /* BRAINSTORMING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = BRAINSTORMING.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +169,8 @@
 				1B0DE1652CD9E89400724E91 /* DueNextWidget */,
 				1B0DE1602CD9E89400724E91 /* Frameworks */,
 				1B0DE12F2CD9E7B600724E91 /* Products */,
+				1BAF54642DBB51D900E3655D /* README.md */,
+				1BAF54672DBB52F400E3655D /* BRAINSTORMING.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -422,6 +430,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BAF54662DBB51DF00E3655D /* README.md in Resources */,
+				1BAF54682DBB52FD00E3655D /* BRAINSTORMING.md in Resources */,
 				1B0DE1392CD9E7B700724E91 /* Preview Assets.xcassets in Resources */,
 				1B0DE1362CD9E7B700724E91 /* Assets.xcassets in Resources */,
 			);
@@ -445,7 +455,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BAF54652DBB51DF00E3655D /* README.md in Resources */,
 				1B0DE16F2CD9E89500724E91 /* Assets.xcassets in Resources */,
+				1BAF54692DBB52FD00E3655D /* BRAINSTORMING.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
