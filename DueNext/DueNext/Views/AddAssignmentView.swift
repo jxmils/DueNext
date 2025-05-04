@@ -90,6 +90,7 @@ struct AddAssignmentView: View {
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(subject == selectedSubject ? Color.blue : Color.clear)
                             )
+                            .contentShape(RoundedRectangle(cornerRadius: 12))
                             .onTapGesture {
                                 // Cancel any in-progress "add subject"
                                 withAnimation(.easeInOut) {
